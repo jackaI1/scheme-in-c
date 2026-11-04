@@ -34,16 +34,29 @@ static int run_stream(VM *vm, FILE *input, const char *name, bool echo, bool ter
     free(r);
     return status;
 }
+static int initialize(VM *vm) {
+    if (setjmp(vm->escape)) {
+        fprintf(stderr, "initialization: %s\n", vm->error);
+        return 1;
+    }
+    vm->global = environment(vm, NIL);
+    install_primitives(vm);
+    return 0;
+}
+static int final_collection(VM *vm) {
+    /* A stream's error target is no longer active after run_stream returns. */
+    if (setjmp(vm->escape)) {
+        fprintf(stderr, "%s\n", vm->error);
+        return 1;
+    }
+    collect(vm);
+    return 0;
+}
 int main(int argc, char **argv) {
     VM *vm = calloc(1, sizeof *vm);
     if (!vm) return 1;
     vm->threshold = 4096;
-    if (setjmp(vm->escape)) {
-        fprintf(stderr, "initialization: %s\n", vm->error);
-        destroy(vm); free(vm); return 1;
-    }
-    vm->global = environment(vm, NIL);
-    install_primitives(vm);
+    if (initialize(vm)) { destroy(vm); free(vm); return 1; }
     bool stats = false, files = false, options = true;
     int status = 0;
     for (int i = 1; i < argc; ++i) {
@@ -68,9 +81,7 @@ int main(int argc, char **argv) {
     }
     if (!files && !status) status = run_stream(vm, stdin, "<stdin>", true, isatty(STDIN_FILENO));
     vm->expr = vm->env = vm->value = vm->cont = NULL;
-    /* run_stream's error handler is no longer active: restore a valid target. */
-    if (!setjmp(vm->escape)) collect(vm);
-    else { fprintf(stderr, "%s\n", vm->error); status = 1; }
+    if (final_collection(vm)) status = 1;
     if (stats) fprintf(stderr, "collections=%zu live=%zu peak=%zu\n", vm->collections, vm->live, vm->peak);
     destroy(vm);
     free(vm);
