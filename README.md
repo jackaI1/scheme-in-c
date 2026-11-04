@@ -1,12 +1,14 @@
 # scheme-in-c
 
-A small program that reads and runs Scheme code.
+A small program for running calculations and experimenting with lists.
 
 ## Overview
 
-I built a small Scheme interpreter in C because I wanted to understand how the languages I write actually run. I could write a recursive function, but I wanted to see how its names get values, how a function remembers a value after returning, and how the program frees memory it no longer needs.
+I built a small program that runs instructions I type because I wanted to see how a programming language turns my code into answers. I can type a calculation and get its answer, or save a set of instructions in a file and run them together.
 
-I can type an expression and see its answer, or run a file of Scheme functions. I use it to work through list and recursion exercises, change the interpreter, and check that the same programs still work. This is a personal project, with a deliberately small language so I can follow the whole path from text to result.
+Those instructions use Scheme, a programming language for expressing calculations and working with lists. The program that reads and runs them is called an interpreter. I wrote mine in C, the language used to build the interpreter itself.
+
+I use it to work through list and recursion exercises, where a function solves a problem by calling itself. I can change how the interpreter works and check that the same programs still give the same answers. This is a personal project, with a deliberately small language so I can follow the whole path from text to result.
 
 ## Try it
 
