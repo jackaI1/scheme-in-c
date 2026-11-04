@@ -20,7 +20,7 @@ Piped input prints values without prompts and stops at the first error. Files al
 - Strings in double quotes, with `\n`, `\t`, `\"`, and `\\` escapes. Strings have no mutation or indexing procedures.
 - Lists and pairs: `'(1 2 3)`, `'()`, and `'(a . b)`. A pair holds a first element and a remainder. A proper list ends in `()`.
 
-A semicolon starts a comment through the end of the line. `'datum` abbreviates `(quote datum)`. The reader limits nesting to 512 levels and individual tokens and strings to 4096 bytes. NUL bytes are rejected. Numbers do not include fractions, exponents, or alternate bases.
+A semicolon starts a comment through the end of the line. `'datum` abbreviates `(quote datum)`. The reader limits nesting to 512 levels and individual tokens and strings to 4096 bytes. NUL bytes in tokens and strings are rejected. Numbers do not include fractions, exponents, or alternate bases.
 
 ## Forms
 

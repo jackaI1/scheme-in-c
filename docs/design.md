@@ -41,7 +41,7 @@ The normal threshold is at least 4096 objects, or twice the survivor count for a
 
 ## Checks I run
 
-`make test` runs 12 Python test groups against the real executable. They include 4 Scheme programs with 41 assertions covering structural recursion, higher-order functions, lexical scope, captured state, parallel `let` initializers, and multiple tail contexts. The CLI checks cover file loading, malformed forms, bad arguments, integer boundaries, input limits, a real pseudo-terminal REPL session, and GC stress.
+`make test` runs 13 Python test groups against the real executable. They include 4 Scheme programs with 41 assertions covering structural recursion, higher-order functions, lexical scope, captured state, parallel `let` initializers, and multiple tail contexts. The CLI checks cover file loading, malformed forms, bad arguments, integer boundaries, input limits, a real pseudo-terminal REPL session, and GC stress.
 
 The tail-memory test runs 200,000 calls, explicitly collects, and requires more than 100 collections, fewer than 2000 final live objects, and fewer than 10,000 peak objects. It would catch a tail-call implementation that still retains caller environments. On my macOS run, the separate three-loop tail program completed with 2769 collections, 252 final live objects, and a peak of 4098 objects. Counts are diagnostic measurements, not a public language guarantee.
 

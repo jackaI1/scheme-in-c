@@ -13,7 +13,7 @@ static int run_stream(VM *vm, FILE *input, const char *name, bool echo, bool ter
             fprintf(stderr, "%s:%zu: %s\n", r->name, r->line, vm->error);
             status = 1;
             vm->expr = vm->env = vm->value = vm->cont = NULL;
-            if (!terminal) break;
+            if (!terminal || feof(input)) break;
             /* A malformed form is discarded up to the next physical line. */
             int c;
             while ((c = fgetc(input)) != '\n' && c != EOF) {}

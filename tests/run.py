@@ -155,6 +155,25 @@ class InterpreterTests(unittest.TestCase):
                 proc.wait(timeout=5)
             os.close(master)
 
+    def test_repl_exits_on_eof_during_incomplete_form(self):
+        import pty
+        master, slave = pty.openpty()
+        proc = subprocess.Popen([BINARY], stdin=slave, stdout=slave, stderr=slave,
+                                close_fds=True)
+        os.close(slave)
+        try:
+            os.write(master, b'(\n\x04')
+            try:
+                proc.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                self.fail('REPL must exit after the first EOF on an incomplete form')
+            self.assertEqual(proc.returncode, 1)
+        finally:
+            if proc.poll() is None:
+                proc.terminate()
+                proc.wait(timeout=5)
+            os.close(master)
+
     def test_missing_file(self):
         p = subprocess.run([BINARY, '/definitely/missing.scm'], capture_output=True, text=True)
         self.assertNotEqual(p.returncode, 0)
